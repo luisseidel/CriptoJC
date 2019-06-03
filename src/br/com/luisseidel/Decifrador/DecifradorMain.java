@@ -20,7 +20,7 @@ public class DecifradorMain {
 			objDec.setToken((String) my_obj.get("token"));
 			objDec.setTextoCifrado((String) my_obj.get("cifrado"));
 			objDec.setTextoDecifrado(Decifrador.decifrar(Long.toString((long) my_obj.get("numero_casas")), objDec.getTextoCifrado()));
-			objDec.setResumoCriptografico((String) my_obj.get("resumo_criptografico"));
+			objDec.setResumoCriptografico(ResumoCriptograficoSHA1.stringHexa(ResumoCriptograficoSHA1.gerarHash(objDec.getTextoDecifrado(), "SHA-1")));
 		
 			System.out.println("VALROES RECUPERADOS DO JSON");
 			System.out.println(objDec.toString());
@@ -34,6 +34,5 @@ public class DecifradorMain {
 		}
 		
 		
-		//System.out.println(Decifrador.decifrar(10, "ofobi lsq mywzedsxq nsckcdob rkc mywo pbyw dkusxq dyy wkxi snokc kxn zeddsxq drow sx yxo zvkmo. qybnyx lovv"));
 	}
 }
