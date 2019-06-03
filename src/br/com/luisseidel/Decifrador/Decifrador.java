@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Decifrador {
 
-	public static String decifrar(int numeroCasas, String textoCifrado) {
+	public static String decifrar(String numeroCasas, String textoCifrado) {
 		List<String> listaNEP = Arrays.asList("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", " ", ".");
 		StringBuffer resultado = new StringBuffer();
 		textoCifrado = textoCifrado.toLowerCase();
@@ -14,7 +14,7 @@ public class Decifrador {
 			if(listaNEP.contains(Character.toString(textoCifrado.charAt(i)))) {
 				resultado.append(textoCifrado.charAt(i));
 			} else {
-				resultado.append(buscaLetras(Character.toString(textoCifrado.charAt(i)), numeroCasas));
+				resultado.append(buscaLetras(Character.toString(textoCifrado.charAt(i)), Integer.parseInt(numeroCasas)));
 			}
 		}
 		return resultado.toString();

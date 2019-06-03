@@ -1,21 +1,38 @@
 package br.com.luisseidel.Decifrador;
-import org.json.JSONObject;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class DecifradorMain {
 	public static void main(String[] args) {
+			
+		JSONObject my_obj;
+		JSONParser parser = new JSONParser();
+		ObjetoDecifrar objDec = new ObjetoDecifrar();
 		
-		String numero_casas = "10";
-		String token = "25f95d6af0cbac6104b8a3dce578b8090e09ba42";
-		String cifrado = "ofobi lsq mywzedsxq nsckcdob rkc mywo pbyw dkusxq dyy wkxi snokc kxn zeddsxq drow sx yxo zvkmo. qybnyx lovv";
-		String decifrado = Decifrador.decifrar(Integer.parseInt(numero_casas), cifrado);
-		String resumo_criptografico = "";
+		try {
+			my_obj = (JSONObject) parser.parse(new FileReader("answer.json"));
+			objDec.setNumeroCasas(Long.toString((long) my_obj.get("numero_casas")));
+			objDec.setToken((String) my_obj.get("token"));
+			objDec.setTextoCifrado((String) my_obj.get("cifrado"));
+			objDec.setTextoDecifrado(Decifrador.decifrar(Long.toString((long) my_obj.get("numero_casas")), objDec.getTextoCifrado()));
+			objDec.setResumoCriptografico((String) my_obj.get("resumo_criptografico"));
 		
-		JSONObject my_obj = new JSONObject();
-		my_obj.put("numero_casas", numero_casas);
-		my_obj.put("token", token);
-		my_obj.put("cifrado", cifrado);
-		my_obj.put("decifrado", decifrado);
-		my_obj.put("resumo_criptografico", resumo_criptografico);
+			System.out.println("VALROES RECUPERADOS DO JSON");
+			System.out.println(objDec.toString());
+		
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		
 		
 		//System.out.println(Decifrador.decifrar(10, "ofobi lsq mywzedsxq nsckcdob rkc mywo pbyw dkusxq dyy wkxi snokc kxn zeddsxq drow sx yxo zvkmo. qybnyx lovv"));
 	}
