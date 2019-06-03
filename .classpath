@@ -4,5 +4,17 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="lib" path="jars/gson-2.8.5.jar"/>
 	<classpathentry kind="lib" path="jars/json-simple-1.1.1.jar"/>
+	<classpathentry kind="lib" path="F:/Codenation/1 - Desafio Julio Cesar/CriptoJC/jars/org.apache.commons.io.jar"/>
+	<classpathentry kind="lib" path="F:/Codenation/1 - Desafio Julio Cesar/CriptoJC/jars/httpcomponents-client-4.5.8/commons-codec-1.11.jar"/>
+	<classpathentry kind="lib" path="F:/Codenation/1 - Desafio Julio Cesar/CriptoJC/jars/httpcomponents-client-4.5.8/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="F:/Codenation/1 - Desafio Julio Cesar/CriptoJC/jars/httpcomponents-client-4.5.8/fluent-hc-4.5.8.jar"/>
+	<classpathentry kind="lib" path="F:/Codenation/1 - Desafio Julio Cesar/CriptoJC/jars/httpcomponents-client-4.5.8/httpclient-4.5.8.jar"/>
+	<classpathentry kind="lib" path="F:/Codenation/1 - Desafio Julio Cesar/CriptoJC/jars/httpcomponents-client-4.5.8/httpclient-cache-4.5.8.jar"/>
+	<classpathentry kind="lib" path="F:/Codenation/1 - Desafio Julio Cesar/CriptoJC/jars/httpcomponents-client-4.5.8/httpclient-osgi-4.5.8.jar"/>
+	<classpathentry kind="lib" path="F:/Codenation/1 - Desafio Julio Cesar/CriptoJC/jars/httpcomponents-client-4.5.8/httpclient-win-4.5.8.jar"/>
+	<classpathentry kind="lib" path="F:/Codenation/1 - Desafio Julio Cesar/CriptoJC/jars/httpcomponents-client-4.5.8/httpcore-4.4.11.jar"/>
+	<classpathentry kind="lib" path="F:/Codenation/1 - Desafio Julio Cesar/CriptoJC/jars/httpcomponents-client-4.5.8/httpmime-4.5.8.jar"/>
+	<classpathentry kind="lib" path="F:/Codenation/1 - Desafio Julio Cesar/CriptoJC/jars/httpcomponents-client-4.5.8/jna-4.5.2.jar"/>
+	<classpathentry kind="lib" path="F:/Codenation/1 - Desafio Julio Cesar/CriptoJC/jars/httpcomponents-client-4.5.8/jna-platform-4.5.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
