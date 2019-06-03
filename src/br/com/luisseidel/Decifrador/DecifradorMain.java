@@ -1,13 +1,8 @@
 package br.com.luisseidel.Decifrador;
-import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -70,7 +65,7 @@ public class DecifradorMain {
 		
 		try {
 			CloseableHttpClient client = HttpClients.createDefault();
-		    HttpPost httpPost = new HttpPost("https://api.codenation.dev/v1/challenge/dev-ps/submit-solution?token=25f95d6af0cbac6104b8a3dce578b8090e09ba42");
+		    HttpPost httpPost = new HttpPost("https://api.codenation.dev/v1/challenge/dev-ps/generate-data?token=25f95d6af0cbac6104b8a3dce578b8090e09ba42");
 		 
 		    String json = objJson.toJSONString();
 		    StringEntity entity = new StringEntity(json);
@@ -78,6 +73,7 @@ public class DecifradorMain {
 		    httpPost.setHeader("Content-type", "multipart/form-data");
 		 
 		    CloseableHttpResponse response = client.execute(httpPost);
+		    System.out.println(response);
 		    System.out.println(response.getStatusLine().getStatusCode());
 		    client.close();
 		} catch (Exception e) {
