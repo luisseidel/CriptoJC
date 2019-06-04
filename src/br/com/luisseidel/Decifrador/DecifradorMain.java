@@ -26,10 +26,10 @@ public class DecifradorMain {
 		
 		try {
 			my_obj = (JSONObject) parser.parse(new FileReader("answer.json"));
-			objDec.setNumeroCasas((String) my_obj.get("numeroCasas"));
+			objDec.setNumeroCasas((String) my_obj.get("numero_casas"));
 			objDec.setToken((String) my_obj.get("token"));
-			objDec.setTextoCifrado((String) my_obj.get("textoCifrado"));
-			objDec.setTextoDecifrado(Decifrador.decifrar((String) my_obj.get("numeroCasas"), objDec.getTextoCifrado()));
+			objDec.setTextoCifrado((String) my_obj.get("cifrado"));
+			objDec.setTextoDecifrado(Decifrador.decifrar((String) my_obj.get("numero_casas"), objDec.getTextoCifrado()));
 			objDec.setResumoCriptografico(ResumoCriptograficoSHA1.stringHexa(ResumoCriptograficoSHA1.gerarHash(objDec.getTextoDecifrado(), "SHA-1")).toUpperCase());
 			
 		} catch (FileNotFoundException e) {
@@ -42,20 +42,28 @@ public class DecifradorMain {
 			
 		
 		//Escrever Objeto JSON
-		FileWriter writeFile = null;
-		JSONObject objJson = new JSONObject();
-		
-		objJson.put("numeroCasas", objDec.getNumeroCasas());
+/*		JSONObject objJson = new JSONObject();
+		objJson.put("numero_casas", objDec.getNumeroCasas());
 		objJson.put("token", objDec.getToken());
-		objJson.put("textoCifrado", objDec.getTextoCifrado());
-		objJson.put("textoDecifrado", objDec.getTextoDecifrado());
-		objJson.put("resumoCriptografico", objDec.getResumoCriptografico());
+		objJson.put("cifrado", objDec.getTextoCifrado());
+		objJson.put("decifrado", objDec.getTextoDecifrado());
+		objJson.put("resumo_criptografico", objDec.getResumoCriptografico());*/
 		
-		System.out.println(objJson);
+		FileWriter writeFile = null;
+		String stringJson = "{\n"
+				+ "\"numero_casas\":" + "\"" + objDec.getNumeroCasas() + "\",\n"
+					+ "\"token\":" + "\"" + objDec.getToken() + "\",\n"
+						+ "\"cifrado\":" + "\"" + objDec.getTextoCifrado() + "\",\n"
+								+ "\"decifrado\":" + "\"" + objDec.getTextoDecifrado() + "\",\n"
+										+ "\"resumo_criptografico\":" + "\"" + objDec.getResumoCriptografico() + "\"\n"
+										+ "}";
+
+		
+		System.out.println(stringJson);
 		
 		try {
 			writeFile = new FileWriter("answer.json");
-			writeFile.write(objJson.toJSONString());
+			writeFile.write(stringJson);
 			writeFile.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -71,7 +79,7 @@ public class DecifradorMain {
             request.setHeader("User-Agent", "Java client");
             request.addHeader("Content-Type", "multipart/form-data");
             request.addHeader("file", "answer");
-            request.setEntity(new StringEntity(objJson.toJSONString()));
+            request.setEntity(new StringEntity(stringJson));
 
             HttpResponse response = client.execute(request);
 
