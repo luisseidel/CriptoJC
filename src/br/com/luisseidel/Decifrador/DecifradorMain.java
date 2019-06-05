@@ -32,7 +32,7 @@ public class DecifradorMain {
 			textoCifrado = (String) json.get("cifrado");
 			textoDecifrado = Decifrador.decifrar(Long.toString(numeroCasas), textoCifrado);
 			resumoCriptografico = ResumoCriptograficoSHA1.stringHexa(
-					ResumoCriptograficoSHA1.gerarHash(textoDecifrado, "SHA-1")).toUpperCase();
+					ResumoCriptograficoSHA1.gerarHash(textoDecifrado, "SHA-1"));
 			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
