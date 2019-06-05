@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<title> upload </title>
+	</head>
+	<body>
+		<form name="myForm" method="POST" enctype="multipart/form-data" action="https://api.codenation.dev/v1/challenge/dev-ps/generate-data?token=25f95d6af0cbac6104b8a3dce578b8090e09ba42">
+			<input type="file" name="file1">
+			<button type="submit" onclick="submitform()"> Enviar </button>
+		</form>	
+	</body>
+	<script type="text/javascript">
+	function submitform(){
+        alert("Sending Json");
+        var xhr = new XMLHttpRequest();
+        xhr.open(form.method, form.action, true);
+        xhr.setRequestHeader('Content-Type', 'multipart/form-data; charset="utf-8"');
+        var formData = JSON.stringify($("#myForm").serializeArray());
+        xhr.send(formData);
+	}
+	
+	</script>
+</html>
