@@ -1,43 +1,38 @@
 package br.com.luisseidel.Decifrador;
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Scanner;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 public class DecifradorMain {
-	@SuppressWarnings("unchecked")
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		
-		//Ler Objeto JSON
-		JSONObject my_obj;
+		//objetos
+		JSONObject json = new JSONObject();
 		JSONParser parser = new JSONParser();
-		ObjetoDecifrar objDec = new ObjetoDecifrar();
+		FileReader file = null;
 		
+		//variaveis
+		Long numeroCasas = 0L;
+		String token, textoCifrado, textoDecifrado, resumoCriptografico;
+		token = textoCifrado = textoDecifrado = resumoCriptografico = "";
+		
+		System.out.println("---- LENDO ARQUIVO JSON ----");
+		//Ler o arquivo json e guardar em memoria os valores
 		try {
-			my_obj = (JSONObject) parser.parse(new FileReader("answer.json"));
-			objDec.setNumeroCasas((String) my_obj.get("numero_casas"));
-			objDec.setToken((String) my_obj.get("token"));
-			objDec.setTextoCifrado((String) my_obj.get("cifrado"));
-			objDec.setTextoDecifrado(Decifrador.decifrar(
-					(String) my_obj.get("numero_casas"), objDec.getTextoCifrado()));
-			objDec.setResumoCriptografico(
-					ResumoCriptograficoSHA1.stringHexa(
-							ResumoCriptograficoSHA1.gerarHash(objDec.getTextoDecifrado(), "SHA-1")).toUpperCase());
+			file = new FileReader("answer.json");
+			json = (JSONObject) parser.parse(file);
+			
+			numeroCasas = (Long) json.get("numero_casas");
+			token = (String) json.get("token");
+			textoCifrado = (String) json.get("cifrado");
+			textoDecifrado = Decifrador.decifrar(Long.toString(numeroCasas), textoCifrado);
+			resumoCriptografico = ResumoCriptograficoSHA1.stringHexa(
+					ResumoCriptograficoSHA1.gerarHash(textoDecifrado, "SHA-1")).toUpperCase();
 			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -47,103 +42,67 @@ public class DecifradorMain {
 			e.printStackTrace();
 		}
 			
-		
-		//Escrever Objeto JSON
-/*		JSONObject objJson = new JSONObject();
-		objJson.put("numero_casas", objDec.getNumeroCasas());
-		objJson.put("token", objDec.getToken());
-		objJson.put("cifrado", objDec.getTextoCifrado());
-		objJson.put("decifrado", objDec.getTextoDecifrado());
-		objJson.put("resumo_criptografico", objDec.getResumoCriptografico());*/
-		
-		FileWriter writeFile = null;
-		String stringJson = "{\n"
-				+ "\"numero_casas\":" + "\"" + objDec.getNumeroCasas() + "\",\n"
-					+ "\"token\":" + "\"" + objDec.getToken() + "\",\n"
-						+ "\"cifrado\":" + "\"" + objDec.getTextoCifrado() + "\",\n"
-								+ "\"decifrado\":" + "\"" + objDec.getTextoDecifrado() + "\",\n"
-										+ "\"resumo_criptografico\":" + "\"" + objDec.getResumoCriptografico() + "\"\n"
-										+ "}";
 
+		//Escreve em uma string os valores formatados
+		String stringJson = "{\n"
+				+ "\"numero_casas\":" + numeroCasas + ",\n"
+					+ "\"token\":" + "\"" + token + "\",\n"
+						+ "\"cifrado\":" + "\"" + textoCifrado + "\",\n"
+								+ "\"decifrado\":" + "\"" + textoDecifrado + "\",\n"
+										+ "\"resumo_criptografico\":" + "\"" + resumoCriptografico + "\"\n"
+										+ "}";
+		
 		
 		System.out.println(stringJson);
+		System.out.println("--- ESCREVENDO NO ARQUIVO answer.json ----");
 		
+		//Escreve no arquivo json
+		FileWriter jsonFile = null;
 		try {
-			writeFile = new FileWriter("answer.json");
-			writeFile.write(stringJson);
-			writeFile.close();
-		} catch (IOException e) {
+			jsonFile = new FileWriter("answer.json");
+			jsonFile.write(stringJson);
+			jsonFile.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		System.out.println("---- ENVIANDO ARQUIVO JSON ----\n");
 		
-		/*try {
-			System.out.println(post(stringJson));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		*/
-		
-		//Enviar Objeto JSON via POST
+		//Realizar conexão e enviar
 		//https://api.codenation.dev/v1/challenge/dev-ps/submit-solution?token=25f95d6af0cbac6104b8a3dce578b8090e09ba42
 		//URL teste ==> https://httpbin.org/post
+/*		
+		final String USER_AGENT = "Mozilla/5.0";
+		String url = "https://api.codenation.dev/v1/challenge/dev-ps/submit-solution?token=25f95d6af0cbac6104b8a3dce578b8090e09ba42";
+		HttpClient client = new DefaultHttpClient();
+		HttpPost post = new HttpPost(url);
 		
-		/*
-		try (CloseableHttpClient client = HttpClientBuilder.create().build()) {
-
-            HttpPost request = new HttpPost("https://httpbin.org/post");
-            request.addHeader("Content-Type", "application/json");
-            request.addHeader("file", "answer");
-            request.setEntity(new StringEntity(stringJson));
-
-            HttpResponse response = client.execute(request);
-
-            BufferedReader bufReader = new BufferedReader(new InputStreamReader(
-                    response.getEntity().getContent()));
-
-            StringBuilder builder = new StringBuilder();
-
-            String line;
-
-            while ((line = bufReader.readLine()) != null) {
-                builder.append(line);
-                builder.append(System.lineSeparator());
-            }
-
-            System.out.println(builder);
-        } catch (Exception e) {
-        	e.printStackTrace();
-        }
-        */
+		//-------------
+		List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
+		urlParameters.add(new BasicNameValuePair("numero_casas", numeroCasas));
+		urlParameters.add(new BasicNameValuePair("token", token));
+		urlParameters.add(new BasicNameValuePair("cifrado", textoCifrado));
+		urlParameters.add(new BasicNameValuePair("decifrado", textoDecifrado));
+		urlParameters.add(new BasicNameValuePair("resumo_criptografico", resumoCriptografico));
+		//-------------
+		
+		post.setHeader("User-Agent", USER_AGENT);
+		post.setHeader("Content-Type", "multipart/form-data");
+		post.setEntity(new UrlEncodedFormEntity(urlParameters));
+		
+		HttpResponse response = client.execute(post);
+		System.out.println("Enviando POST para a url: " + url);
+		System.out.println("Parametros do POST: " + post.getEntity());
+		System.out.println("Codigo de resposta: " + response.getStatusLine().getStatusCode());
+		
+		BufferedReader brd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+		StringBuffer result = new StringBuffer();
+		String line = "";
+		
+		while((line = brd.readLine()) != null) {
+			result.append(line);
+		}
+		System.out.println(result.toString());
+		*/
 	}
-	/*
-	public static String post(String json) throws IOException {
-		 
-        URL url = new URL("https://api.codenation.dev/v1/challenge/dev-ps/submit-solution?token=25f95d6af0cbac6104b8a3dce578b8090e09ba42");
- 
-        HttpURLConnection connection =
-            (HttpURLConnection) url.openConnection();
- 
-        connection.setRequestMethod("POST");
- 
-        connection.setRequestProperty("Content-type", "application/json");
-        connection.setRequestProperty("Accept", "application/json");
- 
-        connection.setDoOutput(true);
- 
- 
-        PrintStream printStream =
-            new PrintStream(connection.getOutputStream());
-        printStream.println(json);
- 
-        connection.connect();
- 
-        String jsonDeResposta =
-            new Scanner(connection.getInputStream()).next();
- 
-        return connection.getResponseMessage();
-    }
-*/
 }
 
